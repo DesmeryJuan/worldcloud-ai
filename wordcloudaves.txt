@@ -1,0 +1,32 @@
+original=readLines("frases.txt",encoding="UTF-8")
+library(tm)
+corpus=VCorpus(VectorSource(original))
+bolsa=DocumentTermMatrix(corpus)
+bolsa=as.matrix(bolsa)
+corpus=tm_map(corpus, content_transformer(tolower))
+corpus=tm_map(corpus, removePunctuation)
+corpus=tm_map(corpus, removeNumbers)
+bolsa=DocumentTermMatrix(corpus)
+bolsa=as.matrix(bolsa)
+bolsa
+library(wordcloud)
+frecuencia = colSums(bolsa)
+wordcloud(names(frecuencia), freq = frecuencia, min.freq = 1, 
+          scale = c(4, 0.5), colors = brewer.pal(8, "Dark2"))
+stopwords_personalizadas <- c("por", "para", "aunque", "como", "las", 
+                              "que", "los", "este", "del", "con", 
+                              "son", "también","más","hay","igual","pero","tal","cual")
+corpus <- tm_map(corpus, removeWords, stopwords_personalizadas)
+bolsa <- DocumentTermMatrix(corpus)
+bolsa <- as.matrix(bolsa)
+frecuencia <- colSums(bolsa)
+
+
+set.seed(1234) 
+wordcloud(names(frecuencia), freq = frecuencia, min.freq = 1, 
+          scale = c(4, 0.5), rot.per = 0.3, # Incrementar rot.per a 0.3 (30%)
+          colors = brewer.pal(8, "Dark2"))
+wordcloud(names(frecuencia), freq = frecuencia, min.freq = 1, 
+          scale = c(4, 0.5), rot.per = 0.3, max.words = 40, colors = brewer.pal(8, "Dark2"))
+
+
